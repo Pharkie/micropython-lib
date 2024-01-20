@@ -17,7 +17,8 @@ class HMAC:
             make_hash = digestmod  # A
         elif isinstance(digestmod, str):
             # A hash name suitable for hashlib.new().
-            make_hash = lambda d=b"": hashlib.new(digestmod, d)  # B
+            # make_hash = lambda d=b"": hashlib.new(digestmod, d)  # this way does not work with uhashlib, which has no .new method
+            make_hash = lambda d=b"": getattr(hashlib, digestmod)(d) # this way works with uhashlib
         else:
             # A module supporting PEP 247.
             make_hash = digestmod.new  # C
